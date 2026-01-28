@@ -1,2 +1,37 @@
-# genai_rag_service
-Production-ready RAG system using FastAPI and local LLMs
+# RAG LLM System (Python + FastAPI)
+
+🚀 **Hire-ready project demonstrating:**
+- RAG (Retrieval-Augmented Generation) pipeline
+- Multi-LLM support (Ollama, OpenAI, Azure)
+- FAISS / Pinecone vector store
+- Async, retry, and circuit breaker for robust LLM calls
+- Dockerized for production-ready deployment
+
+---
+
+## Features
+
+1. **Multi-LLM Factory**:  
+   Switch LLM via `.env` without changing code (`OLLAMA`, `OpenAI`, `Azure`)
+
+2. **Vector Stores**:  
+   - Local FAISS for free  
+   - Optional Pinecone integration via env vars
+
+3. **Resilient LLM calls**:  
+   - Async execution  
+   - Retry with timeout  
+   - Circuit breaker for failures
+
+4. **Dockerized**:  
+   Run anywhere with `docker-compose up --build`
+
+---
+
+## Quick Start
+
+1. Clone repo:
+
+```bash
+git clone https://github.com/BackdoorSentient/RAG-System.git
+cd RAG-System

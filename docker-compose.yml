@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  rag_app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_PROVIDER=ollama
+      - OLLAMA_MODEL=llama3
+      - DATA_DIR=data/raw
+      - FAISS_INDEX_PATH=data/processed/faiss_index
+      - USE_PINECONE=False
+    volumes:
+      - .:/app
