@@ -28,6 +28,23 @@
 
 ---
 
+## Architecture Overview
+
+```text
+User Query
+   ↓
+FastAPI API Layer
+   ↓
+Retriever (FAISS / Pinecone)
+   ↓
+Relevant Chunks
+   ↓
+LLM (Ollama / OpenAI / Azure)
+   ↓
+Final Answer (Grounded in retrieved context)
+
+---
+
 ## Quick Start
 
 1. Clone repo:
