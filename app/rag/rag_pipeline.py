@@ -1,25 +1,20 @@
 from app.llm.ollama_client import OllamaClient
+
+
 class RAGPipeline:
     def __init__(self, vector_store):
         self.vector_store = vector_store
         self.llm = OllamaClient()
 
-    async def ask(self, question: str) -> dict:
+    async def ask(self, question: str):
         docs = self.vector_store.search(question)
 
-        context_blocks = []
-        sources = set()
-
-        for d in docs:
-            context_blocks.append(d.page_content)
-            sources.add(d.metadata.get("source"))
-
-        context = "\n\n".join(context_blocks)
+        context = "\n\n".join(d.page_content for d in docs)
+        sources = list({d.metadata.get("source") for d in docs})
 
         prompt = f"""
-You are a helpful assistant.
-Answer the question ONLY using the context below.
-If not found, say "I don't know".
+Answer ONLY using the context.
+If unsure, say "I don't know".
 
 Context:
 {context}
@@ -28,9 +23,11 @@ Question:
 {question}
 """
 
-        answer = await self.llm.generate(prompt)
-
-        return {
-            "answer": answer,
-            "sources": list(sources)
-        }
+        try:
+            answer = await self.llm.generate(prompt)
+            return {"answer": answer, "sources": sources}
+        except Exception as e:
+            return {
+                "answer": "LLM temporarily unavailable. Please try again.",
+                "error": str(e),
+            }
