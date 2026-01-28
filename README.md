@@ -33,5 +33,5 @@
 1. Clone repo:
 
 ```bash
-git clone https://github.com/BackdoorSentient/RAG-System.git
-cd RAG-System
+git https://github.com/BackdoorSentient/genai_rag_service.git
+cd genai_rag_service
