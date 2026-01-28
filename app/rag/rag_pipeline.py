@@ -48,6 +48,8 @@ Question:
         # 4. Call LLM
         try:
             answer = await self.llm.generate(prompt)
+            print(f"answer:{answer}")
+            print(f"sources:{sources}")
             return {
                 "answer": answer,
                 "sources": sources
