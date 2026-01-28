@@ -71,5 +71,3 @@ class Settings(BaseSettings):
 
 # Singleton instance
 settings = Settings()
-print("Embedding model:", settings.embedding_model)
-print("FAISS path:", settings.faiss_index_path)
