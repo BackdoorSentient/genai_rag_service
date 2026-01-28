@@ -1,25 +1,36 @@
 from app.llm.ollama_client import OllamaClient
-
-
 class RAGPipeline:
     def __init__(self, vector_store):
         self.vector_store = vector_store
         self.llm = OllamaClient()
 
-    def ask(self, question: str) -> str:
+    async def ask(self, question: str) -> dict:
         docs = self.vector_store.search(question)
 
-        context = "\n\n".join([d.page_content for d in docs])
+        context_blocks = []
+        sources = set()
+
+        for d in docs:
+            context_blocks.append(d.page_content)
+            sources.add(d.metadata.get("source"))
+
+        context = "\n\n".join(context_blocks)
 
         prompt = f"""
-        Answer the question using the context below.
-        If the answer is not present, say you don't know.
+You are a helpful assistant.
+Answer the question ONLY using the context below.
+If not found, say "I don't know".
 
-        Context:
-        {context}
+Context:
+{context}
 
-        Question:
-        {question}
-        """
+Question:
+{question}
+"""
 
-        return self.llm.generate(prompt)
+        answer = await self.llm.generate(prompt)
+
+        return {
+            "answer": answer,
+            "sources": list(sources)
+        }
