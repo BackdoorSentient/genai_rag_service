@@ -1,31 +1,19 @@
-import asyncio
+# app/llm/ollama_client.py
+import httpx
 from app.llm.base import BaseLLM
-from app.utils.retry import retry_async
-from app.utils.circuit_breaker import CircuitBreaker
-from config.settings import settings
 
 class OllamaClient(BaseLLM):
-    def __init__(self):
-        self.model = settings.ollama_model
-        self.breaker = CircuitBreaker()
-
-    async def _call_llm(self, prompt: str) -> str:
-        process = await asyncio.create_subprocess_exec(
-            "ollama", "run", self.model,
-            stdin=asyncio.subprocess.PIPE,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        stdout, _ = await process.communicate(prompt.encode())
-        return stdout.decode().strip()
+    def __init__(self, model: str):
+        self.model = model
+        self.base_url = "http://localhost:11434"
 
     async def generate(self, prompt: str) -> str:
-        if not self.breaker.allow_request():
-            raise RuntimeError("LLM circuit breaker open")
-        try:
-            result = await retry_async(lambda: self._call_llm(prompt))
-            self.breaker.record_success()
-            return result
-        except Exception as e:
-            self.breaker.record_failure()
-            raise e
+        payload = {
+            "model": self.model,
+            "prompt": prompt,
+            "stream": False
+        }
+        async with httpx.AsyncClient(timeout=60) as client:
+            res = await client.post(f"{self.base_url}/api/generate", json=payload)
+            res.raise_for_status()
+            return res.json().get("response", "").strip()
