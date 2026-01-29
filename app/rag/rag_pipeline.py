@@ -55,8 +55,11 @@ Question:
                 "sources": sources
             }
 
-        except Exception:
-            return {
-                "answer": "LLM temporarily unavailable. Please try again later.",
-                "sources": sources
-            }
+        # except Exception:
+        #     return {
+        #         "answer": "LLM temporarily unavailable. Please try again later.",
+        #         "sources": sources
+        #     }
+        except Exception as e:
+            print("LLM ERROR >>>", repr(e))
+            raise
