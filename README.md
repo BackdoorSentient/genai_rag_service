@@ -52,3 +52,7 @@ Final Answer (Grounded in retrieved context)
 ```bash
 git https://github.com/BackdoorSentient/genai_rag_service.git
 cd genai_rag_service
+
+##License
+
+MIT License © 2026 Aniket Waichal
