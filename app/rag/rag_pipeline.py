@@ -19,7 +19,7 @@ class RAGPipeline:
         Answer a question using retrieved context.
         """
 
-        # 1. Retrieve relevant documents
+        #retrieve relevant documents
         docs = self.vector_store.search(question)
 
         if not docs:
@@ -28,28 +28,28 @@ class RAGPipeline:
                 "sources": []
             }
 
-        # 2. Build context
+        #build context
         context = "\n\n".join(d.page_content for d in docs)
         sources = list({d.metadata.get("source") for d in docs if d.metadata})
 
-        # 3. Prompt (strict grounding)
+        #prompt
         prompt = f"""
-You are a helpful assistant.
-Answer ONLY using the context below.
-If the answer is not in the context, say "I don't know".
+            You are a helpful assistant.
+            Answer ONLY using the context below.
+            If the answer is not in the context, say "I don't know".
 
-Context:
-{context}
+            Context:
+            {context}
 
-Question:
-{question}
-""".strip()
+            Question:
+            {question}
+            """.strip()
 
-        # 4. Call LLM
+        #llm call
         try:
             answer = await self.llm.generate(prompt)
-            print(f"answer:{answer}")
-            print(f"sources:{sources}")
+            # print(f"answer:{answer}")
+            # print(f"sources:{sources}")
             return {
                 "answer": answer,
                 "sources": sources

@@ -9,7 +9,7 @@ from config.settings import settings
 
 class VectorStore:
     def __init__(self):
-        # Initialize embeddings
+        #initialize embeddings
         self.embeddings = HuggingFaceEmbeddings(
             model_name=settings.embedding_model
         )
@@ -20,9 +20,7 @@ class VectorStore:
         Build or load vector store using Pinecone or FAISS.
         """
 
-        # ----------------------------
-        # Pinecone (optional)
-        # ----------------------------
+        #pinecone 
         if settings.use_pinecone:
             try:
                 import pinecone
@@ -50,9 +48,7 @@ class VectorStore:
             except Exception as e:
                 print(f"[WARN] Pinecone unavailable, falling back to FAISS: {e}")
 
-        # ----------------------------
-        # FAISS (default)
-        # ----------------------------
+        #FAISS 
         texts = [d["text"] for d in documents if d.get("text")]
         metadatas = [d.get("metadata", {}) for d in documents if d.get("text")]
 
@@ -62,7 +58,6 @@ class VectorStore:
                 "Ensure documents contain non-empty 'text'."
             )
 
-        # ✅ CRITICAL FIX: check actual FAISS file
         faiss_file = os.path.join(settings.faiss_index_path, "index.faiss")
 
         if os.path.exists(faiss_file):
@@ -84,9 +79,7 @@ class VectorStore:
             self.db.save_local(settings.faiss_index_path)
 
     def search(self, query: str, k: int = 4):
-        """
-        Perform similarity search.
-        """
+        # Perform similarity search.
         if not self.db:
             raise RuntimeError("Vector store not initialized. Call build_or_load() first.")
 

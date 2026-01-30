@@ -1,6 +1,6 @@
 import time
 
-
+#this is for preventing system from repeatedly calling a failing external service.
 class CircuitBreaker:
     def __init__(self, failure_threshold=3, recovery_timeout=30):
         self.failure_threshold = failure_threshold

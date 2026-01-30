@@ -26,10 +26,8 @@ class Settings(BaseSettings):
 #     extra="ignore",
 # )
 
-    # ----------------------------
-    # LLM Configuration
-    # ----------------------------
-    llm_provider: str = "ollama"  # ollama | openai | azure
+    #llm config
+    llm_provider: str = "ollama"  # ollama,openai,azure
     ollama_model: str = "llama3"
 
     openai_api_key: Optional[str] = None
@@ -40,12 +38,10 @@ class Settings(BaseSettings):
     azure_openai_deployment: Optional[str] = None
     azure_openai_version: Optional[str] = None
 
-    # ----------------------------
-    # Embeddings / Vector Store
-    # ----------------------------
+    #embeddings/vector Store
     data_dir: str = "data/raw"
 
-    #REQUIRED keys
+    #required keys#
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     faiss_index_path: str = "data/processed/faiss_index"
 
@@ -54,20 +50,13 @@ class Settings(BaseSettings):
     pinecone_index_name: Optional[str] = None
     use_pinecone: Optional[bool] = False
 
-    # ----------------------------
-    # Server / FastAPI
-    # ----------------------------
+    #server for fastapi
     host: str = "127.0.0.1"
     port: int = 8000
 
-    # ----------------------------
-    # Misc / Reliability
-    # ----------------------------
     retry_count: int = 3
     timeout_seconds: int = 20
     circuit_breaker_threshold: int = 3
     circuit_breaker_recovery: int = 30
 
-
-# Singleton instance
 settings = Settings()
